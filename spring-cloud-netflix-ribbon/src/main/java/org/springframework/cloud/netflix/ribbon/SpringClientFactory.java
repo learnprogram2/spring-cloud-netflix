@@ -34,11 +34,21 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  *
  * @author Spencer Gibb
  * @author Dave Syer
+ *
+ * 这个factory主要创建 client, load-balancer还有clientConfiguration.
+ * 每个服务(eurekaClient注册的服务)都创建于给SpringApplicationContext, 从里面拿需要的.
+ *
+ *1.  {@link NamedContextFactory} 这个context, 可以理解成一个map, 里面<eurekaServiceName, SpringApplicationContext> 这样的key-v
+ * 来达成我们的目的 为每个eurekaService(一个eureka源码里的application的scope) 创建一个AnnotationConfigApplicationContext
+ *2. {@link RibbonClientConfiguration} 这个是spring的配置类
+ * 这个设计太牛逼了
  */
 public class SpringClientFactory extends NamedContextFactory<RibbonClientSpecification> {
 
 	static final String NAMESPACE = "ribbon";
 
+	// 使用RibbonClientConfiguration这个配置类, 然后本SpringCLientFactory的namespace是ribbon(暂时没有发现用处),
+	// RibbonClientConfiguration 就是每个eurekaService对应的springApplicationContext的配置噢!!!!
 	public SpringClientFactory() {
 		super(RibbonClientConfiguration.class, NAMESPACE, "ribbon.client.name");
 	}
@@ -115,7 +125,7 @@ public class SpringClientFactory extends NamedContextFactory<RibbonClientSpecifi
 
 		return result;
 	}
-
+	// 这里执行拿: 从我们为eurekaClient注册的服务分配的springContext里面拿到type这个bean.
 	@Override
 	public <C> C getInstance(String name, Class<C> type) {
 		C instance = super.getInstance(name, type);
@@ -126,6 +136,7 @@ public class SpringClientFactory extends NamedContextFactory<RibbonClientSpecifi
 		return instantiateWithConfig(getContext(name), type, config);
 	}
 
+	// 这里是拿到context, 用eureka注册的服务名字
 	@Override
 	protected AnnotationConfigApplicationContext getContext(String name) {
 		return super.getContext(name);

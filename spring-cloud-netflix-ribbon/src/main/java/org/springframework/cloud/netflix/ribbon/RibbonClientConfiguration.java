@@ -60,6 +60,9 @@ import static org.springframework.cloud.netflix.ribbon.RibbonUtils.updateToSecur
 /**
  * @author Dave Syer
  * @author Tim Ysewyn
+ * 这个是ribbon的每个服务的spring的配置类噢!
+ *
+ * 这个是ribbon配置的大本营啊
  */
 @SuppressWarnings("deprecation")
 @Configuration(proxyBeanMethods = false)
@@ -144,6 +147,7 @@ public class RibbonClientConfiguration {
 		return new PollingServerListUpdater(config);
 	}
 
+	// 我操, 这里就是ILoadBalancer.
 	@Bean
 	@ConditionalOnMissingBean
 	public ILoadBalancer ribbonLoadBalancer(IClientConfig config,
@@ -152,6 +156,7 @@ public class RibbonClientConfiguration {
 		if (this.propertiesFactory.isSet(ILoadBalancer.class, name)) {
 			return this.propertiesFactory.get(ILoadBalancer.class, config, name);
 		}
+		// 这就是默认的ILoadBalancer啊
 		return new ZoneAwareLoadBalancer<>(config, rule, ping, serverList,
 				serverListFilter, serverListUpdater);
 	}

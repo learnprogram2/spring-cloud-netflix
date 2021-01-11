@@ -39,9 +39,12 @@ import static org.springframework.cloud.netflix.ribbon.RibbonUtils.updateToSecur
  * @author Dave Syer
  * @author Ryan Baxter
  * @author Tim Ysewyn
+ *
+ * 这里实现了loadBalancerClient
  */
 public class RibbonLoadBalancerClient implements LoadBalancerClient {
 
+	/** 这个client是ribbon从spring里面拿bean的入口 */
 	private SpringClientFactory clientFactory;
 
 	public RibbonLoadBalancerClient(SpringClientFactory clientFactory) {
@@ -113,7 +116,9 @@ public class RibbonLoadBalancerClient implements LoadBalancerClient {
 	 */
 	public <T> T execute(String serviceId, LoadBalancerRequest<T> request, Object hint)
 			throws IOException {
+		// 1. 从本ribbonLoadBalancerCLient这个client的spring的context里面拿到loadBalancer
 		ILoadBalancer loadBalancer = getLoadBalancer(serviceId);
+
 		Server server = getServer(loadBalancer, hint);
 		if (server == null) {
 			throw new IllegalStateException("No instances available for " + serviceId);

@@ -86,6 +86,8 @@ public class RibbonAutoConfiguration {
 		return factory;
 	}
 
+	// 这里注入了一个loadBalancerClient, 必须没有其他的loadBalancerCLient的时候就用这个.
+	// 之前在spring-cloud-loadbalancer里面发现的loadbalancerClient不是starter自动引入的, 所以会默认走这里.
 	@Bean
 	@ConditionalOnMissingBean(LoadBalancerClient.class)
 	public LoadBalancerClient loadBalancerClient() {
