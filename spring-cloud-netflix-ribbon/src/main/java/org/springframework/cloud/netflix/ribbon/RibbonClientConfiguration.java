@@ -109,6 +109,7 @@ public class RibbonClientConfiguration {
 		return config;
 	}
 
+	// 默认的IRule
 	@Bean
 	@ConditionalOnMissingBean
 	public IRule ribbonRule(IClientConfig config) {
