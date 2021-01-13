@@ -143,6 +143,7 @@ public class RibbonClientConfiguration {
 		return serverList;
 	}
 
+	// 这个是serverListUpdater
 	@Bean
 	@ConditionalOnMissingBean
 	public ServerListUpdater ribbonServerListUpdater(IClientConfig config) {
@@ -160,7 +161,9 @@ public class RibbonClientConfiguration {
 		}
 		// 这就是默认的ILoadBalancer啊
 		return new ZoneAwareLoadBalancer<>(config, rule, ping, serverList,
-				serverListFilter, serverListUpdater);
+				serverListFilter,
+				// 这个是serverListUpdater.
+				serverListUpdater);
 	}
 
 	@Bean
