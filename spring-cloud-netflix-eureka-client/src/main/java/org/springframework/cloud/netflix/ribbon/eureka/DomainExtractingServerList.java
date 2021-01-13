@@ -29,9 +29,12 @@ import org.springframework.cloud.netflix.ribbon.RibbonProperties;
 
 /**
  * @author Dave Syer
+ *
+ * 这个是对ServerList<DiscoveryEnabledServer>的包装, 把URL包装成domain格式的(我的大概理解, 不做深究).
  */
 public class DomainExtractingServerList implements ServerList<DiscoveryEnabledServer> {
 
+	// 这是serverList
 	private ServerList<DiscoveryEnabledServer> list;
 
 	private final RibbonProperties ribbon;
@@ -45,6 +48,7 @@ public class DomainExtractingServerList implements ServerList<DiscoveryEnabledSe
 		this.approximateZoneFromHostname = approximateZoneFromHostname;
 	}
 
+	// 初始化, 拿所有的.
 	@Override
 	public List<DiscoveryEnabledServer> getInitialListOfServers() {
 		List<DiscoveryEnabledServer> servers = setZones(
@@ -59,6 +63,7 @@ public class DomainExtractingServerList implements ServerList<DiscoveryEnabledSe
 		return servers;
 	}
 
+	// 把DiscoveryEnabledServer包装成DomainExtractingServer: 应该就是把ip包装成domain格式的url
 	private List<DiscoveryEnabledServer> setZones(List<DiscoveryEnabledServer> servers) {
 		List<DiscoveryEnabledServer> result = new ArrayList<>();
 		boolean isSecure = this.ribbon.isSecure(true);

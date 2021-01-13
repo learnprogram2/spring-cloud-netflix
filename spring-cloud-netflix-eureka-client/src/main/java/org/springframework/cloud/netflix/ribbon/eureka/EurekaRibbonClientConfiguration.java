@@ -51,6 +51,9 @@ import org.springframework.util.StringUtils;
  * @author Spencer Gibb
  * @author Dave Syer
  * @author Ryan Baxter
+ *
+ *
+ *
  */
 @Configuration(proxyBeanMethods = false)
 public class EurekaRibbonClientConfiguration {
@@ -96,6 +99,7 @@ public class EurekaRibbonClientConfiguration {
 		return ping;
 	}
 
+	// 妈的, 是这里. RibbonClientConfiguration里面默认装在的是从配置文件里面读取的eureka配置. 这个才是Discovery的.
 	@Bean
 	@ConditionalOnMissingBean
 	public ServerList<?> ribbonServerList(IClientConfig config,
@@ -104,7 +108,9 @@ public class EurekaRibbonClientConfiguration {
 			return this.propertiesFactory.get(ServerList.class, config, serviceId);
 		}
 		DiscoveryEnabledNIWSServerList discoveryServerList = new DiscoveryEnabledNIWSServerList(
-				config, eurekaClientProvider);
+				config, eurekaClientProvider // 这个是eurekaClient
+		);
+		// 这个是动态的serverList持有类, 上面的DiscoveryEnabledNIWSServerList是ribbon从eureka里面拿注册表的入口
 		DomainExtractingServerList serverList = new DomainExtractingServerList(
 				discoveryServerList, config, this.approximateZoneFromHostname);
 		return serverList;

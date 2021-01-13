@@ -129,6 +129,8 @@ public class RibbonClientConfiguration {
 		return new DummyPing();
 	}
 
+	// 这里是ZoneAwareLoadBalancer的bean里面注入的ribbonServerList.
+	// 默认注入的是ConfigurationBasedServerList
 	@Bean
 	@ConditionalOnMissingBean
 	@SuppressWarnings("unchecked")

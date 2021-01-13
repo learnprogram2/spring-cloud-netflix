@@ -107,10 +107,13 @@ public class RibbonLoadBalancerClient implements LoadBalancerClient {
 	 * the last parameter to not mess with the `execute(serviceId, ServiceInstance,
 	 * request)` method. This somewhat breaks the fluent coding style when using a lambda
 	 * to define the LoadBalancerRequest.
+	 *
+	 * TODO 这个就是client发送request的入口.
+	 *
 	 * @param <T> returned request execution result type
 	 * @param serviceId id of the service to execute the request to
 	 * @param request to be executed
-	 * @param hint used to choose appropriate {@link Server} instance
+	 * @param hint used to choose appropriate {@link Server} instance: 负责命中client的instance.
 	 * @return request execution result
 	 * @throws IOException executing the request may result in an {@link IOException}
 	 */
@@ -118,7 +121,7 @@ public class RibbonLoadBalancerClient implements LoadBalancerClient {
 			throws IOException {
 		// 1. 从本ribbonLoadBalancerCLient这个client的spring的context里面拿到loadBalancer
 		ILoadBalancer loadBalancer = getLoadBalancer(serviceId);
-
+		// 2. 我现在猜: 这里是从loadBalancer里面拿到了server的ip.
 		Server server = getServer(loadBalancer, hint);
 		if (server == null) {
 			throw new IllegalStateException("No instances available for " + serviceId);
