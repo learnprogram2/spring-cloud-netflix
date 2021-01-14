@@ -126,6 +126,7 @@ public class RibbonLoadBalancerClient implements LoadBalancerClient {
 		if (server == null) {
 			throw new IllegalStateException("No instances available for " + serviceId);
 		}
+		// 包装成ribbon-server
 		RibbonServer ribbonServer = new RibbonServer(serviceId, server,
 				isSecure(server, serviceId),
 				serverIntrospector(serviceId).getMetadata(server));
@@ -144,11 +145,14 @@ public class RibbonLoadBalancerClient implements LoadBalancerClient {
 			throw new IllegalStateException("No instances available for " + serviceId);
 		}
 
+		// 1. 拿到spring
 		RibbonLoadBalancerContext context = this.clientFactory
 				.getLoadBalancerContext(serviceId);
+
 		RibbonStatsRecorder statsRecorder = new RibbonStatsRecorder(context, server);
 
 		try {
+			 // 2. 在这里调用了request.apply()方法, 开始执行了.
 			T returnVal = request.apply(serviceInstance);
 			statsRecorder.recordStats(returnVal);
 			return returnVal;

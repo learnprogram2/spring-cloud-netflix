@@ -36,6 +36,7 @@ public class RibbonStatsRecorder {
 	public RibbonStatsRecorder(RibbonLoadBalancerContext context, Server server) {
 		this.context = context;
 		if (server != null) {
+			// 从loadBalancer的serverList里面检查server的状态.
 			serverStats = context.getServerStats(server);
 			context.noteOpenConnection(serverStats);
 			tracer = context.getExecuteTracer().start();
