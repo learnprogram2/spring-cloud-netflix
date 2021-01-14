@@ -121,12 +121,14 @@ public class RibbonClientConfiguration {
 		return rule;
 	}
 
+	// 这个也不是默认的ping
 	@Bean
 	@ConditionalOnMissingBean
 	public IPing ribbonPing(IClientConfig config) {
 		if (this.propertiesFactory.isSet(IPing.class, name)) {
 			return this.propertiesFactory.get(IPing.class, config, name);
 		}
+		// 这个是默认的ping
 		return new DummyPing();
 	}
 

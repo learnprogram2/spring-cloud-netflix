@@ -88,6 +88,7 @@ public class EurekaRibbonClientConfiguration {
 		this.approximateZoneFromHostname = approximateZoneFromHostname;
 	}
 
+	// 这个是默认的ping
 	@Bean
 	@ConditionalOnMissingBean
 	public IPing ribbonPing(IClientConfig config) {
